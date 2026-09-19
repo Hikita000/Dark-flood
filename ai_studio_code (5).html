@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DARK FLOOD | Уютное сообщество</title>
+    <meta name="description" content="Официальный сайт уютного Telegram-сообщества DARK FLOOD.">
+    
+    <!-- Подключение шрифтов -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           ПЕРЕМЕННЫЕ И БАЗОВЫЕ НАСТРОЙКИ
+           ========================================= */
+        :root {
+            /* Глубокие темно-коричневые и угольные оттенки из референсов */
+            --bg-base: #0f0c08;
+            --bg-overlay: linear-gradient(135deg, rgba(15, 12, 8, 0.90) 0%, rgba(26, 18, 12, 0.96) 100%);
+            --bg-card: rgba(30, 22, 15, 0.75);
+            
+            /* Мягкие янтарные акценты (закатный свет) */
+            --accent-amber: #e59400;
+            --accent-gold: #ffb732;
+            --accent-glow: rgba(229, 148, 0, 0.3);
+            
+            /* Текст и границы */
+            --text-main: #f0eee9;
+            --text-muted: #a8a29a;
+            --border-color: rgba(229, 148, 0, 0.2);
+            
+            /* Статусы */
+            --danger-bg: rgba(255, 82, 82, 0.15);
+            --danger-text: #ff7676;
+            
+            /* Шрифты */
+            --font-main: 'Inter', sans-serif;
+            --font-heading: 'Montserrat', sans-serif;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--text-main);
+            background-color: var(--bg-base);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* =========================================
+           ФОН И ЭФФЕКТЫ (СТРОГО БЕЗ ПЕРЕКРЫТИЯ КЛИКОВ)
+           ========================================= */
+        .bg-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none; /* ВАЖНО: пропускает клики сквозь себя */
+        }
+
+        .background-image {
+            z-index: -10;
+            /* Атмосферный Майнкрафт закат с шейдерами */
+            background-image: url('https://images.hdqwalls.com/download/minecraft-sunset-1920x1080.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: contrast(1.1) saturate(1.2);
+        }
+
+        .background-overlay {
+            z-index: -9;
+            background: var(--bg-overlay);
+        }
+
+        .particles {
+            z-index: -8;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float 8s infinite ease-in-out;
+            box-shadow: 0 0 12px var(--accent-gold);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            50% { opacity: 0.35; }
+            100% { transform: translateY(-100px) scale(1.2); opacity: 0; }
+        }
+
+        /* =========================================
+           НАВИГАЦИЯ (ШАПКА)
+           ========================================= */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            z-index: 100; /* Поверх всего контента */
+            background: rgba(15, 12, 8, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--accent-amber);
+            text-decoration: none;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            position: relative;
+            z-index: 101;
+            text-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: var(--transition);
+            padding: 10px 0;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--accent-amber);
+            transition: var(--transition);
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        .nav-link:hover {
+            color: var(--accent-gold);
+        }
+
+        .nav-link.active {
+            color: var(--accent-gold);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Гамбургер меню */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 10px;
+            z-index: 101;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: var(--text-main);
+            margin: 5px 0;
+            transition: var(--transition);
+            border-radius: 3px;
+        }
+
+        /* =========================================
+           ОСНОВНОЙ КОНТЕНТ (SPA СТРАНИЦЫ)
+           ========================================= */
+        main {
+            position: relative;
+            z-index: 10; /* Поверх фона, под шапкой */
+            padding-top: 70px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page {
+            display: none;
+            padding: 60px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 34px;
+            color: var(--accent-gold);
+            margin-bottom: 40px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 15px var(--accent-glow);
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            transition: var(--transition);
+            position: relative;
+            z-index: 11;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(229, 148, 0, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px var(--accent-glow);
+        }
+
+        /* =========================================
+           СТРАНИЦА 1: ГЛАВНАЯ
+           ========================================= */
+        #page-home {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: calc(100vh - 150px);
+        }
+        
+        #page-home.active {
+            display: flex;
+        }
+
+        .hero-title {
+            font-family: var(--font-heading);
+            font-size: 68px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 25px rgba(0,0,0,0.9), 0 0 30px var(--accent-glow);
+        }
+
+        .hero-desc {
+            font-size: 18px;
+            color: var(--text-main);
+            max-width: 650px;
+            margin-bottom: 45px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            position: relative;
+            z-index: 20; /* Чтобы кнопки точно нажимались */
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            background: var(--accent-amber);
+            color: #000;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid var(--accent-amber);
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .btn:hover {
+            background: var(--accent-gold);
+            border-color: var(--accent-gold);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px var(--accent-glow);
+        }
+
+        .btn-outline {
+            background: rgba(15, 12, 8, 0.8);
+            color: var(--accent-gold);
+            backdrop-filter: blur(5px);
+            border-color: var(--border-color);
+        }
+
+        .btn-outline:hover {
+            background: rgba(229, 148, 0, 0.15);
+            color: var(--accent-gold);
+            border-color: var(--accent-amber);
+        }
+
+        /* Плашка авторства на главной */
+        .author-badge {
+            margin-top: 60px;
+            padding: 12px 24px;
+            background: rgba(15, 12, 8, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            font-size: 14px;
+            color: var(--text-muted);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: inline-block;
+            z-index: 20;
+            position: relative;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .author-badge:hover {
+            background: rgba(26, 18, 12, 0.9);
+            border-color: rgba(229, 148, 0, 0.4);
+        }
+
+        .author-badge a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .author-badge a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        /* =========================================
+           СТРАНИЦА 2: ИНФОРМАЦИЯ
+           ========================================= */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .info-card h3 {
+            color: var(--accent-gold);
+            font-family: var(--font-heading);
+            font-size: 22px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .info-card p {
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+
+        .highlight {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* =========================================
+           СТРАНИЦА 3: АДМИНИСТРАЦИЯ
+           ========================================= */
+        .admin-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .admin-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-amber);
+        }
+
+        .admin-role {
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .admin-nick {
+            color: var(--text-main);
+            font-family: monospace;
+            font-size: 15px;
+        }
+
+        .admin-tasks {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 12px;
+            font-size: 15px;
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .admin-tasks p {
+            margin-bottom: 15px;
+        }
+        .admin-tasks p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* =========================================
+           СТРАНИЦА 4: РОЛИ
+           ========================================= */
+        .roles-legend {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 40px;
+            background: rgba(0,0,0,0.6);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .role-category h4 {
+            color: var(--accent-gold);
+            font-family: var(--font-heading);
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .role-list {
+            list-style: none;
+        }
+
+        .role-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.05);
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        .role-list li span:first-child {
+            color: var(--text-main);
+        }
+
+        .role-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* =========================================
+           СТРАНИЦА 5: ПРАВИЛА
+           ========================================= */
+        .rules-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .rule-card {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .rule-card:hover {
+            background: rgba(0, 0, 0, 0.7);
+            border-color: var(--border-color);
+        }
+
+        .rule-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .rule-num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background: var(--accent-amber);
+            color: #000;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 16px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .rule-title {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            color: var(--text-main);
+        }
+
+        .rule-desc {
+            color: var(--text-muted);
+            font-size: 15px;
+            padding-left: 50px;
+        }
+
+        .rule-note {
+            font-size: 13px;
+            color: #999;
+            font-style: italic;
+            padding-left: 50px;
+        }
+
+        .rule-punishment {
+            margin-top: 10px;
+            margin-left: 50px;
+            display: inline-block;
+            padding: 6px 12px;
+            background: var(--danger-bg);
+            color: var(--danger-text);
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            align-self: flex-start;
+        }
+
+        /* =========================================
+           ФУТЕР
+           ========================================= */
+        footer {
+            background: #080604;
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+            z-index: 10;
+            margin-top: auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: var(--transition);
+            position: relative;
+            z-index: 11;
+            padding: 8px 16px;
+            background: rgba(229, 148, 0, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-gold);
+            background: rgba(229, 148, 0, 0.2);
+            border-color: var(--accent-amber);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .footer-author {
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--text-muted);
+            position: relative;
+            z-index: 11;
+        }
+
+        .footer-author a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .footer-author a:hover {
+            color: #fff;
+            text-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        .copyright {
+            color: #666;
+            font-size: 13px;
+        }
+
+        /* =========================================
+           МОБИЛЬНАЯ АДАПТАЦИЯ
+           ========================================= */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%; /* Скрыто за экраном */
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(15, 12, 8, 0.98);
+                backdrop-filter: blur(15px);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 40px;
+                transition: left 0.3s ease-in-out;
+                z-index: 99;
+            }
+
+            .nav-links.active {
+                left: 0; /* Показываем меню */
+            }
+
+            .nav-link {
+                font-size: 20px;
+                padding: 15px;
+            }
+
+            .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.active span:nth-child(2) { opacity: 0; }
+            .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+            .hero-title { font-size: 46px; }
+            .hero-desc { font-size: 15px; }
+            .hero-buttons { flex-direction: column; width: 100%; }
+            .btn { width: 100%; text-align: center; }
+            
+            .page { padding: 40px 20px; }
+            .admin-item { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .roles-legend { flex-direction: column; align-items: center; gap: 10px; }
+            
+            .rule-desc, .rule-note, .rule-punishment { padding-left: 0; margin-left: 0; }
+            .rule-header { margin-bottom: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Фоны (pointer-events: none гарантирует, что они не блокируют клики) -->
+    <div class="bg-layer background-image"></div>
+    <div class="bg-layer background-overlay"></div>
+    <div class="bg-layer particles" id="particles"></div>
+
+    <!-- Навигация -->
+    <header>
+        <div class="nav-container">
+            <div class="logo" data-target="page-home">DARK FLOOD</div>
+            <ul class="nav-links" id="nav-links">
+                <li><a class="nav-link active" data-target="page-home">Главная</a></li>
+                <li><a class="nav-link" data-target="page-info">Информация</a></li>
+                <li><a class="nav-link" data-target="page-admin">Администрация</a></li>
+                <li><a class="nav-link" data-target="page-roles">Роли</a></li>
+                <li><a class="nav-link" data-target="page-rules">Правила</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Меню">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- СТРАНИЦА 1: ГЛАВНАЯ -->
+        <div id="page-home" class="page active">
+            <h1 class="hero-title">DARK FLOOD</h1>
+            <p class="hero-desc">Уютное место для общения. Ламповая атмосфера, приятная компания и строгий, но справедливый порядок. Вход во флуд осуществляется строго по заявкам.</p>
+            <div class="hero-buttons">
+                <a href="https://t.me/Jdhokc" target="_blank" rel="noopener noreferrer" class="btn">Написать Владельцу (@Jdhokc)</a>
+                <a href="https://t.me/nyamkotik23" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Написать Совладельцу (@nyamkotik23)</a>
+            </div>
+            <div class="author-badge">
+                Сделано участником клуба <a href="https://t.me/HNKNTA2" target="_blank" rel="noopener noreferrer">@HNKNTA2</a>
+            </div>
+        </div>
+
+        <!-- СТРАНИЦА 2: ИНФОРМАЦИЯ -->
+        <div id="page-info" class="page">
+            <h2 class="section-title">Атмосфера и Порядки</h2>
+            <div class="info-grid">
+                <div class="glass-card info-card">
+                    <h3>🧹 Чистка</h3>
+                    <p>Чистка проходит в <span class="highlight">20:00 по МСК в воскресенье</span>.</p>
+                    <p>Норма сообщений: <span class="highlight">70</span> (на каникулах <span class="highlight">100</span>).</p>
+                    <p>Если вы не набрали норму — выдается варн на месяц.</p>
+                    <p style="color: var(--danger-text); font-weight: 600; margin-top: 15px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);">! 3 Варна = Бан !</p>
+                </div>
+                <div class="glass-card info-card">
+                    <h3>☕ Ресты</h3>
+                    <p>Рест — это официальный отдых от флуда. Во время реста вам не нужно набирать норму и активничать в чате.</p>
+                    <p>По вопросам оформления рестов обращайтесь в ЛС к <span class="highlight">@Jdhokc</span> или <span class="highlight">@nyamkotik23</span>.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- СТРАНИЦА 3: АДМИНИСТРАЦИЯ -->
+        <div id="page-admin" class="page">
+            <h2 class="section-title">Админ-состав</h2>
+            <div class="glass-card">
+                <div class="admin-list">
+                    <div class="admin-item">
+                        <span class="admin-role">Владелец</span>
+                        <span class="admin-nick">@Jdhokc</span>
+                    </div>
+                    <div class="admin-item">
+                        <span class="admin-role">Совладелец</span>
+                        <span class="admin-nick">@nyamkotik23</span>
+                    </div>
+                    <div class="admin-item">
+                        <span class="admin-role">Старший админ</span>
+                        <span class="admin-nick">@sirenliaa, @Pipikalol</span>
+                    </div>
+                    <div class="admin-item">
+                        <span class="admin-role">Младший админ</span>
+                        <span class="admin-nick">—</span>
+                    </div>
+                    <div class="admin-item">
+                        <span class="admin-role">Монтажёр</span>
+                        <span class="admin-nick">@risha227</span>
+                    </div>
+                    <div class="admin-item">
+                        <span class="admin-role">Админы по чистке</span>
+                        <span class="admin-nick">—</span>
+                    </div>
+                    <div class="admin-item">
+                        <span class="admin-role">Админы по нью</span>
+                        <span class="admin-nick">—</span>
+                    </div>
+                </div>
+                <div class="admin-tasks">
+                    <p><strong style="color: var(--text-main);">Задачи владельца и совладельца:</strong> следить за всем флудом, контролировать работу администраторов.</p>
+                    <p><strong style="color: var(--text-main);">Что входит в задачи ст. админа:</strong> Следить за чатом, выдавать варны / муты / баны. Иногда проводить чистки и удалять рекламу.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- СТРАНИЦА 4: РОЛИ -->
+        <div id="page-roles" class="page">
+            <h2 class="section-title">Роли участников</h2>
+            
+            <div class="roles-legend">
+                <span>Занято: ⭐</span>
+                <span>Свободно: —</span>
+                <span>Бронь: 🍀</span>
+            </div>
+
+            <div class="roles-grid">
+                <div class="glass-card role-category">
+                    <h4>MyNeosha</h4>
+                    <ul class="role-list">
+                        <li><span>Невер</span> <span>—</span></li>
+                        <li><span>Илья</span> <span>—</span></li>
+                        <li><span>Илья страх</span> <span>—</span></li>
+                        <li><span>Илья Хронос</span> <span>—</span></li>
+                        <li><span>Алиса</span> <span>⭐</span></li>
+                    </ul>
+                </div>
+
+                <div class="glass-card role-category">
+                    <h4>Nazzy</h4>
+                    <ul class="role-list">
+                        <li><span>Нейзи</span> <span>—</span></li>
+                        <li><span>Вика</span> <span>—</span></li>
+                        <li><span>Хейдвальд</span> <span>—</span></li>
+                        <li><span>Кристалл</span> <span>—</span></li>
+                        <li><span>Невер/Олег</span> <span>—</span></li>
+                    </ul>
+                </div>
+
+                <div class="glass-card role-category">
+                    <h4>Майншильд</h4>
+                    <ul class="role-list">
+                        <li><span>Кэт</span> <span>—</span></li>
+                        <li><span>Неркин</span> <span>—</span></li>
+                        <li><span>Молвин</span> <span>—</span></li>
+                        <li><span>Диамкей</span> <span>—</span></li>
+                        <li><span>Гельмо</span> <span>—</span></li>
+                    </ul>
+                </div>
+
+                <div class="glass-card role-category">
+                    <h4>Эдисон "НП"</h4>
+                    <ul class="role-list">
+                        <li><span>Натаха</span> <span>⭐</span></li>
+                        <li><span>Блумыч</span> <span>—</span></li>
+                        <li><span>Лера</span> <span>—</span></li>
+                        <li><span>Sofi_gray</span> <span>—</span></li>
+                        <li><span>Даниил</span> <span>—</span></li>
+                    </ul>
+                </div>
+
+                <div class="glass-card role-category">
+                    <h4>Линч</h4>
+                    <ul class="role-list">
+                        <li><span>Генри Лэмбтон</span> <span>⭐</span></li>
+                        <li><span>Джон</span> <span>⭐</span></li>
+                        <li><span>Егор Линч</span> <span>—</span></li>
+                        <li><span>Лукас</span> <span>—</span></li>
+                        <li><span>Лили</span> <span>—</span></li>
+                    </ul>
+                </div>
+
+                <div class="glass-card role-category">
+                    <h4>Крестоносец</h4>
+                    <ul class="role-list">
+                        <li><span>Айвен</span> <span>⭐</span></li>
+                        <li><span>Лоргон</span> <span>⭐</span></li>
+                        <li><span>Лиса</span> <span>—</span></li>
+                        <li><span>Руя</span> <span>—</span></li>
+                        <li><span>Маррон</span> <span>—</span></li>
+                    </ul>
+                </div>
+
+                <div class="glass-card role-category">
+                    <h4>Ютуберы</h4>
+                    <ul class="role-list">
+                        <li><span>домер</span> <span>⭐</span></li>
+                        <li><span>Джудлоу</span> <span>⭐</span></li>
+                        <li><span>шарпнесс</span> <span>⭐</span></li>
+                        <li><span>Райм</span> <span>⭐</span></li>
+                    </ul>
+                </div>
+
+                <div class="glass-card role-category">
+                    <h4>Хоррор моды</h4>
+                    <ul class="role-list">
+                        <li><span>Верети</span> <span>⭐</span></li>
+                    </ul>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 25px; color: var(--text-muted); font-size: 14px;">! Если какой-то роли нет — можете предложить ее, добавим в список !</p>
+        </div>
+
+        <!-- СТРАНИЦА 5: ПРАВИЛА -->
+        <div id="page-rules" class="page">
+            <h2 class="section-title">Правила</h2>
+            <div class="rules-grid">
+                
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <span class="rule-num">1</span>
+                        <h3 class="rule-title">Спам</h3>
+                    </div>
+                    <p class="rule-desc">Больше 5 сообщений / голосовых / стикеров подряд считается за спам. Также нельзя кидать стикеры и т.д. через каждое сообщение.</p>
+                    <div class="rule-punishment">Наказание: Мут</div>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <span class="rule-num">2</span>
+                        <h3 class="rule-title">Шутки и оскорбления</h3>
+                    </div>
+                    <p class="rule-desc">Шутки про родных или любые другие оскорбительные высказывания строго запрещены.</p>
+                    <p class="rule-note">(Исключение: если человек не обижается и сам разрешил, то можно)</p>
+                    <div class="rule-punishment">Наказание: Варн (при продолжении — Бан)</div>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <span class="rule-num">3</span>
+                        <h3 class="rule-title">Использование "Калл"</h3>
+                    </div>
+                    <p class="rule-desc">Команду "Калл" могут использовать только админы, совладельцы и владельцы.</p>
+                    <div class="rule-punishment">Наказание: Мут на 40 минут</div>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <span class="rule-num">4</span>
+                        <h3 class="rule-title">Конфликты и ссоры</h3>
+                    </div>
+                    <p class="rule-desc">Если во флуде начинается конфликт и участники отказываются успокаиваться.</p>
+                    <div class="rule-punishment">Наказание: Варн (при продолжении ссоры — Бан)</div>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <span class="rule-num">5</span>
+                        <h3 class="rule-title">Реклама</h3>
+                    </div>
+                    <p class="rule-desc">Если вам нужно что-то прорекламировать, сперва спросите разрешение у владельца или совладельца.</p>
+                    <div class="rule-punishment">Наказание (без разрешения): Варн</div>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <span class="rule-num">6</span>
+                        <h3 class="rule-title">Личная информация и угрозы</h3>
+                    </div>
+                    <p class="rule-desc">Распространение личной информации участников (доксинг) или любые угрозы категорически запрещены.</p>
+                    <div class="rule-punishment">Наказание: Бан</div>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <span class="rule-num">7</span>
+                        <h3 class="rule-title">Бессмысленные сообщения</h3>
+                    </div>
+                    <p class="rule-desc">Отправка длинных, бессмысленных сообщений (флуд символами) запрещена.</p>
+                    <div class="rule-punishment">Наказание: Варн</div>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-header">
+                        <span class="rule-num">8</span>
+                        <h3 class="rule-title">Выход из флуда</h3>
+                    </div>
+                    <p class="rule-desc">Если вы выходите, пишите свою роль и причину. Можно написать причину или роль в ЛС владельцу или совладельцу.</p>
+                    <p class="rule-note" style="color: var(--danger-text); font-weight: 600; margin-top: 5px;">! Незнание правил не освобождает от ответственности !</p>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="https://www.tiktok.com/@dark.flood2" target="_blank" rel="noopener noreferrer">Наш TikTok</a>
+        </div>
+        <div class="footer-author">
+            Сделано участником клуба <a href="https://t.me/HNKNTA2" target="_blank" rel="noopener noreferrer">@HNKNTA2</a>
+        </div>
+        <div class="copyright">
+            &copy; 2026 DARK FLOOD. Все права защищены.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Генерация "светлячков"
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 25;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 3 + 1.5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.top = `${Math.random() * 100}vh`;
+                
+                particle.style.animationDuration = `${Math.random() * 6 + 6}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+
+            // 2. Логика переключения страниц (SPA)
+            const navLinks = document.querySelectorAll('.nav-link, .logo');
+            const pages = document.querySelectorAll('.page');
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('nav-links');
+
+            function switchPage(targetId) {
+                // Скрываем все страницы
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Убираем активный класс у всех ссылок
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+
+                // Показываем нужную страницу
+                const targetPage = document.getElementById(targetId);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                }
+
+                // Подсвечиваем нужную ссылку (если клик не по логотипу)
+                const activeLink = document.querySelector(`.nav-link[data-target="${targetId}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+
+                // Моментальный скролл наверх (без анимации, как в настоящих вкладках)
+                window.scrollTo(0, 0);
+
+                // Закрываем мобильное меню
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+
+            // Назначаем события клика на навигацию
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('data-target');
+                    if (targetId) {
+                        switchPage(targetId);
+                    }
+                });
+            });
+
+            // 3. Мобильное меню (Гамбургер)
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
